@@ -13,8 +13,10 @@ class AccountsWidget {
    * Если переданный элемент не существует,
    * необходимо выкинуть ошибку.
    * */
-  constructor( element ) {
-
+  constructor(element) {
+    if (element === undefined) throw new Error('Передан пустой элемент');
+    this.element = element;
+    this.registerEvents();
   }
 
   /**
@@ -25,7 +27,9 @@ class AccountsWidget {
    * вызывает AccountsWidget.onSelectAccount()
    * */
   registerEvents() {
-
+    document.querySelector('.create-account').addEventListener('click', () => {
+      App.getModal('createAccount').open();
+    });
   }
 
   /**
@@ -39,7 +43,14 @@ class AccountsWidget {
    * метода renderItem()
    * */
   update() {
-
+    if (User.current()) {
+      Account.list(User.current(), (err, response) => {
+        this.clear();
+        for (let i = 0; i < response.data.length; i++) {
+          this.renderItem(response.data[i]);
+        }
+      })
+    }
   }
 
   /**
@@ -48,7 +59,12 @@ class AccountsWidget {
    * в боковой колонке
    * */
   clear() {
-
+    const target = document.querySelectorAll('.accounts-panel > .active.account');
+    if (target) {
+      for (let i = 0; i < target.length; i++) {
+        target[i].remove();
+      }
+    }
   }
 
   /**
@@ -58,8 +74,8 @@ class AccountsWidget {
    * счёта класс .active.
    * Вызывает App.showPage( 'transactions', { account_id: id_счёта });
    * */
-  onSelectAccount( element ) {
-
+  onSelectAccount(element) {
+    
   }
 
   /**
@@ -67,8 +83,13 @@ class AccountsWidget {
    * отображения в боковой колонке.
    * item - объект с данными о счёте
    * */
-  getAccountHTML(item){
-
+  getAccountHTML(item) {
+    return `<li class="active account" data-id="${item.id}">
+              <a href="#">
+                <span>${item.name}</span> /
+                <span>${item.sum} ₽</span>
+              </a>
+            </li>`;
   }
 
   /**
@@ -77,7 +98,7 @@ class AccountsWidget {
    * AccountsWidget.getAccountHTML HTML-код элемента
    * и добавляет его внутрь элемента виджета
    * */
-  renderItem(data){
-
+  renderItem(data) {
+    document.querySelector('.accounts-panel').innerHTML += (this.getAccountHTML(data));
   }
 }
