@@ -30,6 +30,12 @@ class AccountsWidget {
     document.querySelector('.create-account').addEventListener('click', () => {
       App.getModal('createAccount').open();
     });
+
+    for (let i = 0; i < document.getElementsByClassName('account').length; i++) {
+      document.getElementsByClassName('account')[i].addEventListener('click', () => {
+        this.onSelectAccount(document.getElementsByClassName('account')[i]);
+      });
+    }
   }
 
   /**
@@ -49,7 +55,7 @@ class AccountsWidget {
         for (let i = 0; i < response.data.length; i++) {
           this.renderItem(response.data[i]);
         }
-      })
+      });
     }
   }
 
@@ -72,10 +78,10 @@ class AccountsWidget {
    * Устанавливает текущему выбранному элементу счёта
    * класс .active. Удаляет ранее выбранному элементу
    * счёта класс .active.
-   * Вызывает App.showPage( 'transactions', { account_id: id_счёта });
+   * Вызывает App.showPage('transactions', {account_id: id_счёта});
    * */
   onSelectAccount(element) {
-    
+    console.log(element);
   }
 
   /**

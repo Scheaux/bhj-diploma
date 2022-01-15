@@ -42,9 +42,7 @@ class Sidebar {
       App.getModal('login').open();
     });
     document.querySelector('.menu-item_logout').addEventListener('click', () => {
-      User.logout((err, response) => {
-        console.log(response)
-      });
+      User.logout();
     });
   }
 }

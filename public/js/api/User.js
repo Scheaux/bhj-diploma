@@ -71,8 +71,8 @@ class User {
           this.setCurrent(response.user);
           App.getModal('login').close();
           App.setState('user-logged');
+          document.querySelector("#login-form").reset();
         }
-        //callback(err, response);
       }
     });
   }
@@ -90,8 +90,13 @@ class User {
       responseType: 'json',
       data,
       callback: (err, response) => {
+        console.log(data)
+        console.log(response)
         if (response.success && response.user) {
           this.setCurrent(response.user);
+          App.getModal('register').close();
+          App.setState('user-logged');
+          document.querySelector("#register-form").reset();
         }
       }
     });
