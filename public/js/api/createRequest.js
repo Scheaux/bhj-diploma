@@ -13,12 +13,32 @@ const createRequest = (options = {}) => {
 
     try {
         if (options.method != 'GET') {
-            formData.append('email', options.data.email);
-            formData.append('password', options.data.password);
+            for (let i = 0; i < Object.keys(options.data).length; i++) {
+                let key = Object.keys(options.data)[i];
+                let value = Object.values(options.data)[i];
+                
+                formData.append(key, value);
+            }
+
             xhr.open(options.method, options.url);
             xhr.send(formData);
         } else {
-            xhr.open(options.method, `${options.url}?mail=${options.data.email}?password=${options.data.password}`);
+            let url = options.url;
+
+            for (let i = 0; i < Object.keys(options.data).length; i++) {
+                let key = Object.keys(options.data)[i];
+                let value = Object.values(options.data)[i];
+
+                if (key === '0') key = 'id';
+
+                if (i === 0) {
+                    url += `?${key}=${value}`;
+                } else {
+                    url += `&${key}=${value}`;
+                }
+            }
+
+            xhr.open(options.method, url);
             xhr.send();
         }
     } catch (err) {

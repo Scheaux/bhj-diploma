@@ -34,8 +34,9 @@ class CreateTransactionForm extends AsyncForm {
           const optionCode = `<option value="${id}">${name}</option>`;
           const option = document.createElement('option');
           option.innerHTML = optionCode;
+          let option2 = option.cloneNode(true);
           incomeList.appendChild(option);
-          expenseList.appendChild(option);
+          expenseList.appendChild(option2);
         }
       }
     });

@@ -16,7 +16,7 @@ class AccountsWidget {
   constructor(element) {
     if (element === undefined) throw new Error('Передан пустой элемент');
     this.element = element;
-    this.registerEvents();
+    setTimeout(() => this.registerEvents(), 200);
   }
 
   /**
@@ -27,7 +27,7 @@ class AccountsWidget {
    * вызывает AccountsWidget.onSelectAccount()
    * */
   registerEvents() {
-    document.querySelector('.create-account').addEventListener('click', () => {
+    document.querySelector('.create-account').addEventListener('click', event => {
       App.getModal('createAccount').open();
     });
 
@@ -81,7 +81,12 @@ class AccountsWidget {
    * Вызывает App.showPage('transactions', {account_id: id_счёта});
    * */
   onSelectAccount(element) {
-    console.log(element);
+    let active = document.querySelectorAll('.active.account');
+    active.forEach(item => {
+      item.classList.remove('active');
+    });
+    element.classList.add('active');
+    App.showPage('transactions', {account_id: element.dataset.id});
   }
 
   /**

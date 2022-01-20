@@ -14,13 +14,16 @@ class TransactionsPage {
     if (element === undefined) throw new Error('Передан пустой элемент');
     this.element = element;
     this.update();
+    document.querySelector('.remove-account').addEventListener('click', () => {
+      this.removeAccount();
+    });
   }
 
   /**
    * Вызывает метод render для отрисовки страницы
    * */
   update() {
-
+    this.render();
   }
 
   /**
@@ -43,7 +46,12 @@ class TransactionsPage {
    * для обновления приложения
    * */
   removeAccount() {
-
+    Account.remove(this.currentAccount, (err, response) => {
+      if (response.success) {
+        this.clear();
+        App.updateWidgets();
+      }
+    })
   }
 
   /**
@@ -64,8 +72,9 @@ class TransactionsPage {
    * */
   render(options) {
     if (options === undefined) return null;
-    Account.get(User.current(), (err, response) => {
-      console.log(response)
+    this.currentAccount = options.account_id;
+    Account.get(options.account_id, (err, response) => {
+      this.renderTitle(response.data.name);
     });
   }
 
@@ -76,13 +85,14 @@ class TransactionsPage {
    * */
   clear() {
     this.renderTransactions([]);
+    this.renderTitle('Название счёта');
   }
 
   /**
    * Устанавливает заголовок в элемент .content-title
    * */
   renderTitle(name) {
-
+    document.querySelector('.content-title').innerText = name;
   }
 
   /**
@@ -146,6 +156,6 @@ class TransactionsPage {
    * используя getTransactionHTML
    * */
   renderTransactions(data) {
-    console.log(data)
+    //console.log(data)
   }
 }
