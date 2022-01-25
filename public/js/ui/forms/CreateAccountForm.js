@@ -12,6 +12,8 @@ class CreateAccountForm extends AsyncForm {
     Account.create(data, (err, response) => {
       App.update();
       App.getModal('createAccount').close();
+      document.getElementById('new-account-form').reset();
+      new AccountsWidget().update();
     });
   }
 }

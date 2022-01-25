@@ -254,6 +254,37 @@
         </div>
     </div>
 
+    <div class="modal fade in" id="modal-confirm-deletion" data-modal-id="confirmDeletion">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Удалить счёт?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary" id="send-to-void">Подтвердить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade in" id="modal-delete-transaction" data-modal-id="deleteTransaction">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Удалить транзакцию?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary" id="send-to-bin">Подтвердить</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="js/api/createRequest.js"></script>
     <script src="js/api/Entity.js"></script>

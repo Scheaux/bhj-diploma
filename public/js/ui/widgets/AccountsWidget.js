@@ -14,7 +14,7 @@ class AccountsWidget {
    * необходимо выкинуть ошибку.
    * */
   constructor(element) {
-    if (element === undefined) throw new Error('Передан пустой элемент');
+    //if (element === undefined) throw new Error('Передан пустой элемент');
     this.element = element;
     setTimeout(() => this.registerEvents(), 200);
   }
@@ -65,7 +65,7 @@ class AccountsWidget {
    * в боковой колонке
    * */
   clear() {
-    const target = document.querySelectorAll('.accounts-panel > .active.account');
+    const target = document.querySelectorAll('.accounts-panel > .account');
     if (target) {
       for (let i = 0; i < target.length; i++) {
         target[i].remove();
@@ -95,7 +95,7 @@ class AccountsWidget {
    * item - объект с данными о счёте
    * */
   getAccountHTML(item) {
-    return `<li class="active account" data-id="${item.id}">
+    return `<li class="account" data-id="${item.id}">
               <a href="#">
                 <span>${item.name}</span> /
                 <span>${item.sum} ₽</span>

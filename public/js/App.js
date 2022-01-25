@@ -54,6 +54,8 @@ class App {
       createAccount: new Modal(document.querySelector("#modal-new-account")),
       newIncome: new Modal(document.querySelector("#modal-new-income")),
       newExpense: new Modal(document.querySelector("#modal-new-expense")),
+      confirmDeletion: new Modal(document.querySelector("#modal-confirm-deletion")),
+      deleteTransaction: new Modal(document.querySelector("#modal-delete-transaction")),
     };
   }
 

@@ -50,8 +50,13 @@ class CreateTransactionForm extends AsyncForm {
    * */
   onSubmit(data) {
     Transaction.create(data, (err, response) => {
-      console.log(data)
-      console.log(response)
+      if (response.success) {
+        App.update();
+        document.getElementById('new-expense-form').reset();
+        document.getElementById('new-income-form').reset();
+        App.getModal('newExpense').close();
+        App.getModal('newIncome').close();
+      }
     })
   }
 }

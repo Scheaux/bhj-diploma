@@ -11,19 +11,17 @@ class TransactionsPage {
    * через registerEvents()
    * */
   constructor(element) {
-    if (element === undefined) throw new Error('Передан пустой элемент');
+    if (element === undefined) throw new Error("Передан пустой элемент");
     this.element = element;
     this.update();
-    document.querySelector('.remove-account').addEventListener('click', () => {
-      this.removeAccount();
-    });
+    this.registerEvents();
   }
 
   /**
    * Вызывает метод render для отрисовки страницы
    * */
   update() {
-    this.render();
+    this.render({account_id: this.currentAccount});
   }
 
   /**
@@ -33,7 +31,22 @@ class TransactionsPage {
    * TransactionsPage.removeAccount соответственно
    * */
   registerEvents() {
+    let confirmFunc = () => {
+      this.confirm();
+    }
 
+    document.querySelector(".remove-account").removeEventListener("click", confirmFunc);
+
+    document.querySelector(".remove-account").addEventListener("click", confirmFunc);
+
+    // удаление транзакций
+    const transactionRemove = document.querySelectorAll(".transaction__remove");
+    for (let i = 0; i < transactionRemove.length; i++) {
+        transactionRemove[i].addEventListener("click", () => {
+        App.getModal("deleteTransaction").open();
+        this.removeTransaction(transactionRemove[i].dataset.id);
+      });
+    }
   }
 
   /**
@@ -50,8 +63,9 @@ class TransactionsPage {
       if (response.success) {
         this.clear();
         App.updateWidgets();
+        new AccountsWidget().update();
       }
-    })
+    });
   }
 
   /**
@@ -61,7 +75,16 @@ class TransactionsPage {
    * либо обновляйте текущую страницу (метод update) и виджет со счетами
    * */
   removeTransaction(id) {
+    document.getElementById("send-to-bin").addEventListener("click", () => {
+      Transaction.remove(id, (err, response) => {
+        if (response.success) {
+          this.update();
+          new AccountsWidget().update();
+        }
+      });
 
+      App.getModal("deleteTransaction").close();
+    });
   }
 
   /**
@@ -72,9 +95,21 @@ class TransactionsPage {
    * */
   render(options) {
     if (options === undefined) return null;
+
     this.currentAccount = options.account_id;
+
     Account.get(options.account_id, (err, response) => {
       this.renderTitle(response.data.name);
+    });
+
+    Transaction.list({account_id: options.account_id}, (err, response) => {
+      if (response.success) {
+        document.querySelector(".content").innerHTML = "";
+        for (let i = 0; i < response.data.length; i++) {
+          this.renderTransactions(response.data[i]);
+        }
+        this.registerEvents();
+      }
     });
   }
 
@@ -84,15 +119,15 @@ class TransactionsPage {
    * Устанавливает заголовок: «Название счёта»
    * */
   clear() {
-    this.renderTransactions([]);
-    this.renderTitle('Название счёта');
+    document.querySelector(".content").innerHTML = "";
+    this.renderTitle("Название счёта");
   }
 
   /**
    * Устанавливает заголовок в элемент .content-title
    * */
   renderTitle(name) {
-    document.querySelector('.content-title').innerText = name;
+    document.querySelector(".content-title").innerText = name;
   }
 
   /**
@@ -100,24 +135,24 @@ class TransactionsPage {
    * в формат «10 марта 2019 г. в 03:20»
    * */
   formatDate(date) {
-    let fullDate = date.split('-');
-    let dayAndHour = fullDate[2].split(' ');
+    let fullDate = date.split("-");
+    let dayAndHour = fullDate[2].split(" ");
     let month = fullDate[1];
-    let hour = dayAndHour[1].split(':')[0];
-    let minute = dayAndHour[1].split(':')[1];
+    let hour = dayAndHour[1].split(":")[0];
+    let minute = dayAndHour[1].split(":")[1];
 
-    if (month === '01') month = 'января';
-    else if (month === '02') month = 'февраля';
-    else if (month === '03') month = 'марта';
-    else if (month === '04') month = 'апреля';
-    else if (month === '05') month = 'мая';
-    else if (month === '06') month = 'июня';
-    else if (month === '07') month = 'июля';
-    else if (month === '08') month = 'августа';
-    else if (month === '09') month = 'сентября';
-    else if (month === '10') month = 'октября';
-    else if (month === '11') month = 'ноября';
-    else if (month === '12') month = 'декабря';
+    if (month === "01") month = "января";
+    else if (month === "02") month = "февраля";
+    else if (month === "03") month = "марта";
+    else if (month === "04") month = "апреля";
+    else if (month === "05") month = "мая";
+    else if (month === "06") month = "июня";
+    else if (month === "07") month = "июля";
+    else if (month === "08") month = "августа";
+    else if (month === "09") month = "сентября";
+    else if (month === "10") month = "октября";
+    else if (month === "11") month = "ноября";
+    else if (month === "12") month = "декабря";
 
     return `${dayAndHour[0]} ${month} ${fullDate[0]} г. в ${hour}:${minute}`;
   }
@@ -127,7 +162,6 @@ class TransactionsPage {
    * item - объект с информацией о транзакции
    * */
   getTransactionHTML(item) {
-    console.log(item)
     return `<div class="transaction transaction_${item.type} row">
     <div class="col-md-7 transaction__details">
       <div class="transaction__icon">
@@ -148,7 +182,7 @@ class TransactionsPage {
             <i class="fa fa-trash"></i>  
         </button>
     </div>
-</div>`
+</div>`;
   }
 
   /**
@@ -156,6 +190,19 @@ class TransactionsPage {
    * используя getTransactionHTML
    * */
   renderTransactions(data) {
-    //console.log(data)
+    const content = document.querySelector(".content");
+    const html = this.getTransactionHTML(data);
+    content.innerHTML += html;
+  }
+
+  confirm() {
+    if (document.querySelector(".active.account")) {
+      App.getModal("confirmDeletion").open();
+    }
+
+    document.getElementById("send-to-void").addEventListener("click", () => {
+      this.removeAccount();
+      App.getModal("confirmDeletion").close();
+    });
   }
 }
