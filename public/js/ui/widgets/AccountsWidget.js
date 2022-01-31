@@ -16,7 +16,7 @@ class AccountsWidget {
   constructor(element) {
     //if (element === undefined) throw new Error('Передан пустой элемент');
     this.element = element;
-    setTimeout(() => this.registerEvents(), 200);
+    this.registerEvents();
   }
 
   /**
@@ -111,5 +111,6 @@ class AccountsWidget {
    * */
   renderItem(data) {
     document.querySelector('.accounts-panel').innerHTML += (this.getAccountHTML(data));
+    this.registerEvents();
   }
 }

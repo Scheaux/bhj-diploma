@@ -72,6 +72,7 @@ class User {
           App.getModal('login').close();
           App.setState('user-logged');
           document.querySelector("#login-form").reset();
+          new AccountsWidget().update();
         }
       }
     });

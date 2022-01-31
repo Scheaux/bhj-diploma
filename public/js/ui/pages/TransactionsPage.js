@@ -13,7 +13,6 @@ class TransactionsPage {
   constructor(element) {
     if (element === undefined) throw new Error("Передан пустой элемент");
     this.element = element;
-    this.update();
     this.registerEvents();
   }
 
@@ -103,7 +102,9 @@ class TransactionsPage {
     });
 
     Transaction.list({account_id: options.account_id}, (err, response) => {
-      if (response.success) {
+      if (response.data.length === 0) {
+        this.renderTitle('Название счёта');
+      } else if (response.success) {
         document.querySelector(".content").innerHTML = "";
         for (let i = 0; i < response.data.length; i++) {
           this.renderTransactions(response.data[i]);
