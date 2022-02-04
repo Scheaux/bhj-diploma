@@ -4,12 +4,6 @@
  * Имеет свойство URL, равное '/user'.
  * */
 class User {
-  constructor() {
-    window.onload = () => {
-      console.log(this.current())
-    }
-  }
-
   static URL = '/user';
   /**
    * Устанавливает текущего пользователя в
@@ -91,8 +85,6 @@ class User {
       responseType: 'json',
       data,
       callback: (err, response) => {
-        console.log(data)
-        console.log(response)
         if (response.success && response.user) {
           this.setCurrent(response.user);
           App.getModal('register').close();
