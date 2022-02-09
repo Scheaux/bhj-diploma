@@ -61,8 +61,7 @@ class TransactionsPage {
     Account.remove(this.currentAccount, (err, response) => {
       if (response.success) {
         this.clear();
-        App.updateWidgets();
-        new AccountsWidget().update();
+        App.update();
       }
     });
   }
@@ -78,7 +77,7 @@ class TransactionsPage {
       Transaction.remove(id, (err, response) => {
         if (response.success) {
           this.update();
-          new AccountsWidget().update();
+          App.update();
         }
       });
 
@@ -98,13 +97,14 @@ class TransactionsPage {
     this.currentAccount = options.account_id;
 
     Account.get(options.account_id, (err, response) => {
-      this.renderTitle(response.data.name);
+      if (response?.data?.name != undefined) {
+        this.renderTitle(response.data.name);
+        document.querySelector(".content").innerHTML = "";
+      }
     });
 
     Transaction.list({account_id: options.account_id}, (err, response) => {
-      if (response.data.length === 0) {
-        this.renderTitle('Название счёта');
-      } else if (response.success) {
+      if (response.success) {
         document.querySelector(".content").innerHTML = "";
         for (let i = 0; i < response.data.length; i++) {
           this.renderTransactions(response.data[i]);
@@ -136,26 +136,27 @@ class TransactionsPage {
    * в формат «10 марта 2019 г. в 03:20»
    * */
   formatDate(date) {
-    let fullDate = date.split("-");
-    let dayAndHour = fullDate[2].split(" ");
-    let month = fullDate[1];
-    let hour = dayAndHour[1].split(":")[0];
-    let minute = dayAndHour[1].split(":")[1];
+    // let fullDate = date.split("-");
+    // let dayAndHour = fullDate[2].split(" ");
+    // let month = fullDate[1];
+    // let hour = dayAndHour[1].split(":")[0];
+    // let minute = dayAndHour[1].split(":")[1];
 
-    if (month === "01") month = "января";
-    else if (month === "02") month = "февраля";
-    else if (month === "03") month = "марта";
-    else if (month === "04") month = "апреля";
-    else if (month === "05") month = "мая";
-    else if (month === "06") month = "июня";
-    else if (month === "07") month = "июля";
-    else if (month === "08") month = "августа";
-    else if (month === "09") month = "сентября";
-    else if (month === "10") month = "октября";
-    else if (month === "11") month = "ноября";
-    else if (month === "12") month = "декабря";
+    // if (month === "01") month = "января";
+    // else if (month === "02") month = "февраля";
+    // else if (month === "03") month = "марта";
+    // else if (month === "04") month = "апреля";
+    // else if (month === "05") month = "мая";
+    // else if (month === "06") month = "июня";
+    // else if (month === "07") month = "июля";
+    // else if (month === "08") month = "августа";
+    // else if (month === "09") month = "сентября";
+    // else if (month === "10") month = "октября";
+    // else if (month === "11") month = "ноября";
+    // else if (month === "12") month = "декабря";
 
-    return `${dayAndHour[0]} ${month} ${fullDate[0]} г. в ${hour}:${minute}`;
+    // return `${dayAndHour[0]} ${month} ${fullDate[0]} г. в ${hour}:${minute}`;
+    return date;
   }
 
   /**

@@ -49,6 +49,8 @@ class CreateTransactionForm extends AsyncForm {
    * в котором находится форма
    * */
   onSubmit(data) {
+    const account = document.querySelector('.account.active');
+    data.account_id = account.dataset.id;
     Transaction.create(data, (err, response) => {
       if (response.success) {
         App.update();
